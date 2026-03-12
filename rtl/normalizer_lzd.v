@@ -28,11 +28,12 @@ module normalizer_lzd (
             zero_flag = 1'b1;
             lzd_count = 8'd50;
         end else begin
-            // Count leading zeros
-            lzd_count = 8'd0;
-            for (i = 49; i >= 0; i = i - 1) begin
-                if (data_in[i] == 1'b0 && lzd_count == (8'd49 - i[7:0])) begin
-                    lzd_count = lzd_count + 8'd1;
+            // Count leading zeros: iterate from LSB to MSB.
+            // Last matching assignment wins, giving position of the MSB.
+            lzd_count = 8'd50;
+            for (i = 0; i <= 49; i = i + 1) begin
+                if (data_in[i]) begin
+                    lzd_count = 8'd49 - i[7:0];
                 end
             end
             // Normalize: left shift to remove leading zeros

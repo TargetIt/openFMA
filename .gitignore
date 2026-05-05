@@ -21,6 +21,13 @@ delivery/phase*/*.spef
 delivery/phase*/sdf/
 delivery/phase*/spef/
 
+# Model generated files
+model/c/fma_model
+model/test/vectors/
+
+# Python cache
+__pycache__/
+
 # OS files
 .DS_Store
 Thumbs.db

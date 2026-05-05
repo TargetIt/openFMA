@@ -218,20 +218,22 @@ uint32_t fp32_fma_compute(uint32_t a, uint32_t b, uint32_t c) {
     uint32_t mant_c = (fc.exp == 0) ? fc.mant : (fc.mant | (1 << 23));
     int32_t  exp_c  = (fc.exp == 0) ? -126 : (fc.exp - 127);
 
-    // 乘积扩展到 50-bit
+    // 乘积扩展到 50-bit (binary point at bit 48):
+    //   product_value = product_50 / 2^48 * 2^exp_p
     uint64_t product_50 = product_48 << 2;
-    uint64_t c_50 = (uint64_t)mant_c << 2;
+    int32_t result_exp = exp_p;
 
-    int32_t result_exp;
+    // C 对齐到和乘积相同的 binary point (bit 48):
+    //   C_value = mant_c / 2^23 * 2^exp_c
+    //   c_base = mant_c << 25 (即 mant_c / 2^23 = c_base / 2^48)
+    uint64_t c_base_50 = (uint64_t)mant_c << 25;
+
     uint64_t result_50;
     uint8_t  result_sign;
 
-    // 对齐 + 相加（用绝对值比较来处理正负号）
-    int32_t exp_diff = exp_p - exp_c;
-
-    if (exp_diff >= 0) {
-        uint64_t c_aligned = (exp_diff >= 50) ? 0 : (c_50 >> exp_diff);
-        result_exp = exp_p;
+    if (exp_p >= exp_c) {
+        int32_t shift_amt = exp_p - exp_c;
+        uint64_t c_aligned = (shift_amt >= 50) ? 0 : (c_base_50 >> shift_amt);
         if (sign_p == fc.sign) {
             result_50 = product_50 + c_aligned;
             result_sign = sign_p;
@@ -245,17 +247,18 @@ uint32_t fp32_fma_compute(uint32_t a, uint32_t b, uint32_t c) {
             }
         }
     } else {
-        uint64_t p_aligned = (-exp_diff >= 50) ? 0 : (product_50 >> (-exp_diff));
+        int32_t shift_amt = exp_c - exp_p;
+        uint64_t p_aligned = (shift_amt >= 50) ? 0 : (product_50 >> shift_amt);
         result_exp = exp_c;
         if (sign_p == fc.sign) {
-            result_50 = c_50 + p_aligned;
+            result_50 = c_base_50 + p_aligned;
             result_sign = fc.sign;
         } else {
-            if (c_50 >= p_aligned) {
-                result_50 = c_50 - p_aligned;
+            if (c_base_50 >= p_aligned) {
+                result_50 = c_base_50 - p_aligned;
                 result_sign = fc.sign;
             } else {
-                result_50 = p_aligned - c_50;
+                result_50 = p_aligned - c_base_50;
                 result_sign = sign_p;
             }
         }
@@ -265,26 +268,32 @@ uint32_t fp32_fma_compute(uint32_t a, uint32_t b, uint32_t c) {
     if (result_50 == 0)
         return (uint32_t)result_sign << 31;
 
-    // 前导零检测（找结果最高位1的位置）
-    int lzc = 0;
-    while (((result_50 >> (49 - lzc)) & 1) == 0 && lzc < 49)
-        lzc++;
+    // 找最高位1 (binary point at bit 48)
+    int lead_pos = -1;
+    for (int i = 49; i >= 0; i--) {
+        if ((result_50 >> i) & 1) { lead_pos = i; break; }
+    }
+    int shift = lead_pos - 48;
 
-    if (lzc > 0) {
-        result_50 <<= lzc;
-        result_exp -= lzc;
+    if (shift > 0)      { result_50 >>= shift; result_exp += shift; }
+    else if (shift < 0) { result_50 <<= -shift; result_exp -= -shift; }
+
+    // mantissa_val = rne(result_50, 25) — 舍去低25位, 保留高25位(1+23+1 guard)
+    uint64_t mantissa_val = rne(result_50, 25);
+
+    // 舍入溢出检查: bit24 置位说明值>=2, 需要右移并调整指数
+    if (mantissa_val >> 24) {
+        mantissa_val >>= 1;
+        result_exp += 1;
     }
 
-    // 舍入到 23-bit 尾数
-    uint64_t rounded = rne(result_50, 48 - 23);
     int32_t final_exp = result_exp + 127;
-    uint32_t final_mant = (uint32_t)(rounded & 0x7FFFFF);
+    uint32_t final_mant = (uint32_t)(mantissa_val & 0x7FFFFF);
 
-    // 上溢/下溢检查
     if (final_exp >= 255)
-        return ((uint32_t)result_sign << 31) | (255U << 23);  // 无穷大
+        return ((uint32_t)result_sign << 31) | (255U << 23);
     if (final_exp <= 0)
-        return (uint32_t)result_sign << 31;  // 下溢到零
+        return (uint32_t)result_sign << 31;
 
     return ((uint32_t)result_sign << 31) | ((uint32_t)final_exp << 23) | final_mant;
 }

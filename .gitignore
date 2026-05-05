@@ -1,3 +1,26 @@
+# Simulation outputs
 *.vcd
 *.vvp
 sim
+
+# OpenLane run outputs
+runs/
+
+# Delivery binaries (reports only are committed)
+delivery/phase*/*.v
+delivery/phase*/*.log
+delivery/phase*/*.csv
+delivery/phase*/*.sdf
+delivery/phase*/*.def
+delivery/phase*/*.gds
+delivery/phase*/*.lef
+delivery/phase*/*.lib
+delivery/phase*/*.spice
+delivery/phase*/*.sdc
+delivery/phase*/*.spef
+delivery/phase*/sdf/
+delivery/phase*/spef/
+
+# OS files
+.DS_Store
+Thumbs.db

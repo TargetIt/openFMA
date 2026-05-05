@@ -1,0 +1,22 @@
+VCD info: dumpfile wave.vcd opened for output.
+=== Stage 4: Complete FMA Top Testbench ===
+--- FP32 Mode Regression ---
+PASS: FP32: 1*1+0=1 - result = 3f800000
+PASS: FP32: 2*3+4=10 - result = 41200000
+--- FP16 Mode Regression ---
+PASS: FP16: 1*1+0=1 - result = 00003c00
+PASS: FP16: 2*3+4=10 - result = 00004900
+--- FP8x4 Mode Regression ---
+PASS: FP8x4: 1*1+1=2 all - result = 40404040
+--- INT8 MAD Mode Tests ---
+PASS: INT8: 2*3+4=10 - result[15:0] = 000a
+PASS: INT8: (-1)*2+5=3 - result[15:0] = 0003
+PASS: INT8: 10*10+0=100 - result[15:0] = 0064
+PASS: INT8: (-128)*1+0=-128 - result[15:0] = ff80
+PASS: INT8: 0*0+0=0 - result[15:0] = 0000
+PASS: INT8: 127*127=16129 - result[15:0] = 3f01
+--- Acc16 Mode Regression ---
+PASS: Acc16: 0+1*1=1 - result = 3f800000
+=== Test Summary: 12/12 passed, 0 failed ===
+ALL TESTS PASSED
+/mnt/d/work/qpwork/github/TargetIt/openFMA/phase2_sim/tb/tb_fma_top_stage4.v:225: $finish called at 755000 (1ps)

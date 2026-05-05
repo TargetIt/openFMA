@@ -1,0 +1,19 @@
+Design Name: fma_top_stage4
+Run Directory: /work/openlane/fma_top/runs/RUN_2026.05.05_03.57.29
+----------------------------------------
+
+Magic DRC Summary:
+Source: /work/openlane/fma_top/runs/RUN_2026.05.05_03.57.29/reports/signoff/drc.rpt
+Total Magic DRC violations is 0
+----------------------------------------
+
+LVS Summary:
+Source: /work/openlane/fma_top/runs/RUN_2026.05.05_03.57.29/logs/signoff/41-fma_top_stage4.lef.lvs.log
+Number of nets: 9114                       |Number of nets: 9114                       
+Design is LVS clean.
+----------------------------------------
+
+Antenna Summary:
+Source: /work/openlane/fma_top/runs/RUN_2026.05.05_03.57.29/logs/signoff/44-arc.log
+Pin violations: 10
+Net violations: 10

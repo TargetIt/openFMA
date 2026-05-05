@@ -1,0 +1,10 @@
+Partial/Required:  2.00, Required:    400.0, Partial:   799.11, Net: net106, Pin: _09425_/A1, Layer: met3
+Partial/Required:  1.96, Required:    400.0, Partial:   784.83, Net: net85, Pin: _09473_/A1, Layer: met2
+Partial/Required:  1.83, Required:    400.0, Partial:   731.22, Net: B[4], Pin: _07612_/A, Layer: met3
+Partial/Required:  1.70, Required:    400.0, Partial:    681.5, Net: net88, Pin: _09492_/A1, Layer: met2
+Partial/Required:  1.68, Required:    400.0, Partial:   670.29, Net: net182, Pin: output182/A, Layer: met3
+Partial/Required:  1.49, Required:    400.0, Partial:   597.78, Net: net8, Pin: _10778_/B, Layer: met1
+Partial/Required:  1.24, Required:    400.0, Partial:    494.0, Net: acc_reg\[10\], Pin: _08172_/A1, Layer: met1
+Partial/Required:  1.19, Required:    400.0, Partial:    475.0, Net: acc_reg\[2\], Pin: _09415_/A0, Layer: met1
+Partial/Required:  1.11, Required:    400.0, Partial:   443.47, Net: net131, Pin: output131/A, Layer: met3
+Partial/Required:  1.06, Required:    400.0, Partial:   425.11, Net: acc_reg\[27\], Pin: _09716_/B, Layer: met1

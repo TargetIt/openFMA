@@ -19,6 +19,13 @@ C 语言的位运算 (`&`, `|`, `^`, `<<`, `>>`) 和硬件门电路有直接对�
 
 ## 编译与运行
 
+**方式一：一键运行（推荐，无需安装 gcc）**
+```bash
+bash run.sh
+```
+> 脚本自动通过 Docker 编译运行，完全不用装 gcc
+
+**方式二：本地编译（需要 gcc）**
 ```bash
 gcc -o fma_model fma_model.c -lm
 ./fma_model

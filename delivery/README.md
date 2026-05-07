@@ -108,6 +108,33 @@
 
 ---
 
+## 版图截图 (`images/`)
+
+> 以下图片由 KLayout + Yosys 自动生成
+
+| 图片 | 说明 | 生成工具 |
+|------|------|---------|
+| `chip_full.png` (1.3MB) | 完整芯片版图 (2400×1800) | KLayout batch mode |
+| `final_layout.png` (894KB) | 最终 GDS 版图 (2000×1500) | KLayout batch mode |
+| `layout_detail.png` (25KB) | 左下角细节放大 | KLayout batch mode |
+| `layout_center.png` (27KB) | 中心区域放大 | KLayout batch mode |
+| `synthesis_hierarchy.png` (22MB) | Yosys 综合后层次原理图 | Yosys show + Graphviz dot |
+| `synthesis_schematic.dot` (11MB) | 综合后门级 DOT 图 (12,321 cells) | Yosys show |
+| `synthesis_hierarchy.dot` (510KB) | 模块层次 DOT 图 | Yosys show |
+
+**设计统计 (来自 Yosys)**:
+- 12,321 个标准单元
+- 559 个 DFF 触发器
+- 2,794 条连线, 20,608 个 wire bits
+- 6 种运算模式: FP32/FP16/FP8x4/INT8/FP16→FP32 Acc/FP8x4→FP32 Acc
+
+**物理设计**:
+- 425µm × 436µm = 0.186 mm²
+- 170 种标准单元类型
+- 38,540 总单元数 (含 filler/decap/tap)
+
+---
+
 ## 签核结论
 
 **✅ 全流程通过** — 多精度 FMA (FP32/FP16/FP8x4/INT8/Acc) IP 核成功完成 RTL→GDS 实现。所有质量门禁通过 (时序收敛、DRC=0、LVS=0)。GDS/LEF/LIB/SDF/SPEF 等交付件完整可用。

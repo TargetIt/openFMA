@@ -28,6 +28,10 @@ model/test/vectors/
 # Python cache
 __pycache__/
 
+# Large generated images (can be regenerated)
+delivery/images/*.dot
+delivery/images/synthesis_hierarchy.png
+
 # OS files
 .DS_Store
 Thumbs.db
